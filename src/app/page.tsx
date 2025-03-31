@@ -1,27 +1,61 @@
+"use client";
+
+import { useState } from "react";
+import { motion } from "framer-motion";
+
 export default function Home() {
+  const [showRickRoll, setShowRickRoll] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  const [noButtonPos, setNoButtonPos] = useState({ top: "50%", left: "50%" });
+
+  const handleYesClick = () => {
+    setShowMessage(true);
+    setTimeout(() => setShowRickRoll(true), 2000); // Delay before showing Rick Roll
+  };
+
+  const moveNoButton = () => {
+    const randomX = Math.random() * window.innerWidth - 100;
+    const randomY = Math.random() * window.innerHeight - 50;
+    setNoButtonPos({ top: `${randomY}px`, left: `${randomX}px` });
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 lg:static lg:w-auto lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-      </div>
-
-      <div className="relative flex place-items-center">
-        <h1 className="text-4xl font-bold">Welcome to Next.js!</h1>
-      </div>
-
-      <div className="mt-10 flex items-center space-x-4">
-        <a
-          href="https://vercel.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-black text-white px-6 py-3 rounded-lg"
-        >
-          Deploy to Vercel
-        </a>
-      </div>
+    <main
+      className={`flex min-h-screen items-center justify-center ${
+        showRickRoll ? "bg-cover bg-center" : "bg-black"
+      }`}
+      style={{
+        backgroundImage: showRickRoll
+          ? "url('/rickroll.gif')" // Make sure to add this image in your `public` folder
+          : "none",
+      }}
+    >
+      {!showRickRoll ? (
+        <div className="bg-black p-6 rounded-lg shadow-xl text-center text-white">
+          {!showMessage ? (
+            <>
+              <h2 className="text-xl font-bold">Will you be my girlfriend?</h2>
+              <div className="mt-4 flex justify-center space-x-4">
+                <button
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg"
+                  onClick={handleYesClick}
+                >
+                  Yes
+                </button>
+                <motion.button
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg absolute"
+                  style={{ top: noButtonPos.top, left: noButtonPos.left }}
+                  onMouseEnter={moveNoButton}
+                >
+                  No
+                </motion.button>
+              </div>
+            </>
+          ) : (
+            <h2 className="text-xl font-bold">SIKE APRIL FOOLS!</h2>
+          )}
+        </div>
+      ) : null}
     </main>
   );
 }
